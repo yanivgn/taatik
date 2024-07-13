@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="he">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+    <title>השדה החדשה</title>
+    <style>
+        body {
+            text-align: right;
+            background-color: white;
+            font-family: Tahoma, sans-serif;
+            font-size: 18px; 
+        }
+
+        h1 {
+            margin: 10px 0;
+            font-size: 36px; 
+        }
+
+        .form-control {
+            margin-bottom: 20px;
+            min-height: 150px;
+            border: 1px solid gray;
+            font-size: 22px; 
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 20px auto;
+            width: 100%;
+        }
+
+        #modifiedText {
+            background-color: #4267B2;
+            color: white;
+        }
+
+        .copy {
+            margin: 10px 0;
+        }
+
+        .copied {
+            display: none;
+        }
+    </style>
+</head>
+
+<body dir="rtl">
+    <section class="container">
+        <h1>השַדַ֘ה החדשה</h1>
+        <hr>
+        <p>
+            חלק מהפונטים ברשת לא מציגים היטב סימן שדה על אות עברית. כלי זה יאפשר לכם להחליף את השדה בסימן חלופי.
+        </p>
+        <div class="flex">
+            <textarea id="inputText" dir="rtl" class="form-control" placeholder="כתבו בערבית..."></textarea>
+            <textarea readonly id="modifiedText" dir="rtl" class="form-control"></textarea>
+        </div>
+        <div>
+            <button class="copy">העתקת הטקסט</button> <span class="copied">הועתק!</span>
+        </div>
+    </section>
+
+    <script>
+        // Unicode characters for the original and new Shadda
+        const originalShadda = '\u0651';
+        const alternativeShadda = '\u0598';
+        const arabicCharRegex = /[\u0600-\u06FF]/;
+        let useAlternativeShadda = true;
+
+        // Event listeners
+        document.querySelector("#inputText").addEventListener("input", updateModifiedText);
+        document.querySelector(".copy").addEventListener("click", copyModifiedText);
+
+        // Function to update the modified text area
+        function updateModifiedText() {
+            const inputText = document.querySelector("#inputText").value;
+            document.querySelector("#modifiedText").value = replaceShadda(inputText);
+        }
+
+        // Function to replace the Shadda in the input text
+        function replaceShadda(input) {
+            return input.split('').map((char, index) => {
+                if (char === originalShadda && !arabicCharRegex.test(input[index - 1]) && useAlternativeShadda) {
+                    return alternativeShadda;
+                }
+                if (char === alternativeShadda && !useAlternativeShadda) {
+                    return originalShadda;
+                }
+                return char;
+            }).join('');
+        }
+
+        // Function to copy the modified text to the clipboard
+        function copyModifiedText() {
+            const modifiedTextElement = document.querySelector("#modifiedText");
+            modifiedTextElement.select();
+            document.execCommand('copy');
+            showCopiedNotification();
+        }
+
+        // Function to show the "copied" notification
+        function showCopiedNotification() {
+            const copiedNotification = document.querySelector(".copied");
+            copiedNotification.style.display = "inline-block";
+            setTimeout(() => {
+                copiedNotification.style.display = "none";
+            }, 2000);
+        }
+    </script>
+</body>
+
+</html>
