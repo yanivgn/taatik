@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="he">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>תעתיק</title>
+    <link href="https://fonts.googleapis.com/css?family=M+PLUS+1p" rel="stylesheet">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <style>
+        /* General Styles */
+        body {
+            font-family: 'M PLUS 1p', sans-serif;
+            background-color: #f4f4f9;
+            color: #333;
+            margin: 0;
+            padding: 0;
+        }
+
+        /* Container styling */
+        .container {
+            max-width: 800px;
+            margin: 40px auto;
+            padding: 20px;
+            background-color: white;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+            text-align: right;
+            direction: rtl;
+        }
+
+        /* Heading styling */
+        h1 {
+            font-size: 2em;
+            color: #333;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        /* Form control styling */
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-control {
+            width: 100%;
+            min-height: 150px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            padding: 10px;
+            font-size: 1em;
+            box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1);
+            transition: border-color 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+        }
+
+        .form-control:focus {
+            border-color: #4267B2;
+            box-shadow: 0 0 8px rgba(66, 103, 178, 0.6);
+            outline: none;
+        }
+
+        /* Button styling */
+        button {
+            margin: 20px 0;
+            padding: 10px 20px;
+            font-size: 1em;
+            color: white;
+            background-color: #4267B2;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s ease-in-out;
+        }
+
+        button:hover {
+            background-color: #365899;
+        }
+
+        /* Options styling */
+        .options-container {
+            display: flex;
+            justify-content: flex-end;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        #options {
+            font-size: 20px;
+            cursor: pointer;
+        }
+
+        #options-sign {
+            font-size: 25px;
+            cursor: pointer;
+        }
+
+        /* Options box styling */
+        #options-box {
+            display: none;
+            background-color: #fff;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 10px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            position: absolute;
+            right: 20px;
+            top: 50px;
+            z-index: 1000;
+        }
+
+        .option-item {
+            margin-bottom: 10px;
+        }
+
+        /* Taatik textarea styling */
+        textarea#taatik {
+            background-color: #4267B2;
+            color: white;
+            resize: none;
+        }
+
+        /* Footer styling */
+        footer {
+            text-align: center;
+            margin-top: 20px;
+            font-size: 0.9em;
+            color: #777;
+        }
+
+        /* Media query for larger screens */
+        @media (min-width: 700px) {
+            .form-control {
+                width: 48%;
+                margin: 10px 1%;
+            }
+
+            .form-group {
+                display: flex;
+                flex-wrap: wrap;
+                justify-content: space-between;
+            }
+        }
+    </style>
+</head>
+<body>
+    <section class="container">
+        <h1>תעתיק</h1>
+        <div class="options-container">
+            <span id="options">
+                <i id="options-sign" class="fa fa-gear" title="התאמה אישית"></i>
+            </span>
+            <div id="options-box">
+                <div class="option-item">
+                    <label for="dad">
+                        <input id="dad" type="checkbox"> 
+                        ض עם דֿ
+                    </label>
+                </div>
+                <div class="option-item">
+                    <label for="sad">
+                        <input id="sad" type="checkbox"> 
+                        ص עם סֿֿ
+                    </label>
+                </div>
+                <div class="option-item">
+                    <label for="za">
+                        <input id="za" type="checkbox"> 
+                        ظ עם זֿ
+                    </label>
+                </div>
+                <div class="option-item">
+                    <label for="ghain">
+                        <input id="ghain" type="checkbox"> 
+                        غ עם רֿ
+                    </label>
+                </div>
+            </div>
+        </div>
+        <div class="form-group">
+            <textarea id="arab" dir="rtl" class="form-control" placeholder="כתוב בערבית..."></textarea>
+        </div>
+        <div class="form-group">
+            <textarea readonly id="taatik" dir="rtl" class="form-control"></textarea>
+        </div>
+        <button id="copyButton"> 
+            העתקת טקסט
+        </button>
+    </section>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // Define input elements
+            const inputs = {
+                dad: document.getElementById("dad"),
+                sad: document.getElementById("sad"),
+                za: document.getElementById("za"),
+                ghain: document.getElementById("ghain"),
+                arabic: document.getElementById("arab"),
+                taatik: document.getElementById("taatik")
+            };
+
+            // Define letter mappings
+            const letterMapping = {
+                'ا': "א", 'ى': "א", 'أ': "א", 'إ': "א", 'ئ': "א", 'ؤ': "א", 'ء': "א",
+                'آ': "אא", 'ب': "ב", 'ج': "ג'", 'ح': "ח", 'خ': "ח'", 'ت': "ת", 'ث': "ת'",
+                'د': "ד", 'ذ': "ד'", 'ر': "ר", 'ز': "ז", 'س': "ס", 'ش': "ש", 'ع': "ע",
+                'ك': "כ", 'ق': "ק", 'ف': "פ", 'ط': "ט", 'ل': "ל", 'م': "מ", 'ن': "נ",
+                'ه': "ה", 'ة': "ה", 'و': "ו", 'ي': "י",
+                'َ': "", 'ً': "", 'ِ': "", 'ُ': "", 'ٌ': "", 'ْ': "", 'ّ': "",
+                "،": ",", "١": "1", "٢": "2", "٣": "3", "٤": "4", "٥": "5", "٦": "6",
+                "٧": "7", "٨": "8", "٩": "9", "٠": "0", "؟": "?"
+            };
+
+            // Final form mappings without final kaf
+            const finalForms = {
+                'מ': 'ם', 'נ': 'ן', 'פ': 'ף', 'צ': 'ץ'
+            };
+
+            // Function to handle input event
+            function handleInput() {
+                const arabic = inputs.arabic.value;
+                inputs.taatik.value = transliterate(arabic);
+            }
+
+            // Function to handle paste event
+            function handlePaste(event) {
+                setTimeout(() => {
+                    const arabic = inputs.arabic.value;
+                    inputs.taatik.value = transliterate(arabic);
+                }, 0);
+            }
+
+            // Function to transliterate Arabic text
+            function transliterate(input) {
+                let output = "";
+                for (let i = 0; i < input.length; i++) {
+                    let letter = input[i];
+                    if (letterMapping.hasOwnProperty(letter)) {
+                        let hebrewLetter = letterMapping[letter];
+                        if (i === input.length - 1 || /\s/.test(input[i + 1])) {
+                            // Check if the letter should be in its final form
+                            if (finalForms.hasOwnProperty(hebrewLetter)) {
+                                hebrewLetter = finalForms[hebrewLetter];
+                            }
+                        }
+                        output += hebrewLetter;
+                    } else if (letter == 'ص') {
+                        output += inputs.sad.checked ? "סֿ" : "צ";
+                    } else if (letter == 'ض') {
+                        output += inputs.dad.checked ? "דֿ" : "צ'";
+                    } else if (letter == 'غ') {
+                        output += inputs.ghain.checked ? "רֿ" : "ע'";
+                    } else if (letter == 'ظ') {
+                        output += inputs.za.checked ? 'זֿ' : "ט'";
+                    } else {
+                        output += letter;
+                    }
+                }
+                return output;
+            }
+
+            // Attach event listeners
+            Object.values(inputs).forEach(input => {
+                if (input.type === "checkbox") {
+                    input.addEventListener("change", handleInput);
+                } else if (input.type === "textarea") {
+                    input.addEventListener("input", handleInput);
+                    input.addEventListener("paste", handlePaste);
+                }
+            });
+
+            // Set initial display style for options box to 'none'
+            const optionsBox = document.getElementById("options-box");
+            optionsBox.style.display = "none";
+
+            // Toggle options box visibility
+            document.getElementById("options").addEventListener("click", () => {
+                optionsBox.style.display = optionsBox.style.display === "none" ? "block" : "none";
+            });
+
+            // Copy to clipboard functionality
+            document.getElementById("copyButton").addEventListener("click", () => {
+                inputs.taatik.select();
+                document.execCommand("copy");
+            });
+        });
+    </script>
+</body>
+</html>
